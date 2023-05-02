@@ -1,0 +1,15 @@
+{
+  "name": "nestjs-contentful",
+  "version": "0.0.1",
+  "author": "Niels Mokkenstorm <niels@mokkenstorm.dev>",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@nestjs/axios": "^2.0.0",
+    "@nestjs/common": "^9.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}

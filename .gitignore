@@ -18,6 +18,9 @@ node_modules/
 # Environment stuff
 .env
 
+# Exclude compiled files
+dist
+
 # Editors
 *.swo
 *.swp
