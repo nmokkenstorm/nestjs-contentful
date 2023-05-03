@@ -1,30 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { ContentfulClient } from './client.service'
 
-// todo
-type DateString = string
-
-type Field = {
+interface Field {
   id: string
   name: string
-  type: 'Symbol' | 'Array' | 'RichText'
-  localized: boolean
   required: boolean
-  omitted: boolean
-  disabled: boolean
+  localized: boolean
+  type: 'Text' | 'Symbol' | 'RichText'
 }
 
-type ContentType = {
+interface ContentType {
+  id: string
   name: string
-  description: string
   fields: Field[]
-  sys: {
-    id: string
-    type: 'ContentType'
-  }
-  publishedVersion: number
-  publishedAt: DateString
-  version: number
 }
 
 @Injectable()
