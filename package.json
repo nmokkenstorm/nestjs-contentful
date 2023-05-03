@@ -5,11 +5,22 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "test:e2e": "npx jest --config ./tests/jest-e2e.json --runInBand",
+    "test:e2e:dev": "npx jest --config ./tests/jest-e2e.json --runInBand --watch"
+  },
   "dependencies": {
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.4.0"
   },
   "devDependencies": {
+    "@nestjs/core": "^9.4.0",
+    "@nestjs/platform-express": "^9.4.0",
+    "@nestjs/testing": "^9.4.0",
+    "@types/jest": "^29.5.1",
+    "http": "^0.0.1-security",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
   }
 }
