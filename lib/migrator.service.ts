@@ -26,4 +26,12 @@ export class ContentfulMigrator {
 
     return data
   }
+
+  async createType(type: ContentType): Promise<ContentType> {
+    const data = await this.client.put<ContentType>(`content_types${type.id}`)
+
+    Logger.log(data)
+
+    return data
+  }
 }

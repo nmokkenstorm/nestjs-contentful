@@ -25,6 +25,10 @@ export class ContentfulClient {
     return this.request<T>('get', path, data)
   }
 
+  async put<T>(path: string, data: Data = {}): Promise<T> {
+    return this.request<T>('put', path, data)
+  }
+
   private getUrl(path: string): string {
     return [
       this.url,
