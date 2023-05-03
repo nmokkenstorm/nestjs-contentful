@@ -1,7 +1,7 @@
 import { DynamicModule, Module, Logger } from '@nestjs/common'
 import { HttpModule } from '@nestjs/axios'
 import { ContentfulClient } from './client.service'
-import { ContentfulMigrator } from './migrator.service'
+import { ContentfulMigrationClient } from './migration-client.service'
 
 import {
   CONTENTFUL_ENV,
@@ -23,12 +23,12 @@ interface Options {
 @Module({
   imports: [HttpModule],
   exports: [ContentfulModule],
-  providers: [ContentfulClient, ContentfulMigrator],
+  providers: [ContentfulClient, ContentfulMigrationClient],
 })
 export class ContentfulModule {
   private readonly logger = new Logger('Contentful')
 
-  constructor(private readonly migrator: ContentfulMigrator) {}
+  constructor(private readonly migrator: ContentfulMigrationClient) {}
 
   static forRoot({
     token,

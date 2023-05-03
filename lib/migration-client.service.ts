@@ -16,7 +16,7 @@ interface ContentType {
 }
 
 @Injectable()
-export class ContentfulMigrator {
+export class ContentfulMigrationClient {
   constructor(private readonly client: ContentfulClient) {}
 
   async findTypes(): Promise<ContentType[]> {
