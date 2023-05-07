@@ -1,7 +1,11 @@
 import { DynamicModule, Module, Logger } from '@nestjs/common'
 import { HttpModule } from '@nestjs/axios'
 import { ContentfulClient } from './client.service'
-import { ContentfulMigrationClient } from './migration-client.service'
+import { MigrationClient } from './migration-client.service'
+import { TypeComperator } from './type-comperator.service'
+import { SimpleComperator } from './simple-comperator.service'
+import { Migrator } from './migrator.service'
+import { Differ } from './differ.service'
 
 import {
   CONTENTFUL_ENV,
@@ -23,12 +27,21 @@ interface Options {
 @Module({
   imports: [HttpModule],
   exports: [ContentfulModule],
-  providers: [ContentfulClient, ContentfulMigrationClient],
+  providers: [
+    ContentfulClient,
+    MigrationClient,
+    Migrator,
+    Differ,
+    {
+      provide: TypeComperator,
+      useClass: SimpleComperator,
+    },
+  ],
 })
 export class ContentfulModule {
   private readonly logger = new Logger('Contentful')
 
-  constructor(private readonly migrator: ContentfulMigrationClient) {}
+  constructor(private readonly migrator: Migrator) {}
 
   static forRoot({
     token,
@@ -48,7 +61,6 @@ export class ContentfulModule {
           provide: CONTENTFUL_TOKEN,
           useValue: token,
         },
-
         {
           provide: CONTENTFUL_SPACE,
           useValue: space,
@@ -57,6 +69,14 @@ export class ContentfulModule {
           provide: CONTENTFUL_URL,
           useValue: url,
         },
+        {
+          provide: CONTENTFUL_URL,
+          useValue: url,
+        },
+        {
+          provide: TypeComperator,
+          useClass: SimpleComperator,
+        },
       ],
       exports: [ContentfulClient],
     }
@@ -64,7 +84,7 @@ export class ContentfulModule {
 
   async onApplicationBootstrap() {
     this.logger.log('checking for updates..')
-    await this.migrator.findTypes()
+    await this.migrator.ensureExists([{ id: 'foo', name: 'bar', fields: [] }])
     this.logger.log('done updating')
   }
 }

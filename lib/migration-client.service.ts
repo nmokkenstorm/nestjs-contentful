@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { ContentfulClient } from './client.service'
 
-interface Field {
+interface ContentField {
   id: string
   name: string
   required: boolean
@@ -9,29 +9,59 @@ interface Field {
   type: 'Text' | 'Symbol' | 'RichText'
 }
 
-interface ContentType {
+export interface ContentType {
   id: string
   name: string
-  fields: Field[]
+  description?: string
+  fields: ContentField[]
+}
+
+type SysType = 'Array' | 'ContentType'
+type Sys<T extends SysType = SysType> = {
+  type: T
+  id: string
+  publishedCounter: number
+}
+
+type ContentTypeResponse = {
+  sys: Sys
+  name: string
+  fields: ContentField[]
+}
+
+type Wrapper = {
+  sys: Sys<'Array'>
+  total: number
+  skip: number
+  limit: number
+  items: ContentTypeResponse[]
 }
 
 @Injectable()
-export class ContentfulMigrationClient {
+export class MigrationClient {
   constructor(private readonly client: ContentfulClient) {}
 
   async findTypes(): Promise<ContentType[]> {
-    const data = await this.client.get<ContentType[]>('content_types')
+    const { items } = await this.client.get<Wrapper>('content_types')
 
-    Logger.log(data)
+    return items.map(({ sys, ...rest }) => ({ ...rest, id: sys.id }))
+  }
+
+  async createType({ id, ...rest }: ContentType): Promise<ContentType> {
+    const data = await this.client.put<ContentType>(`content_types/${id}`, rest)
 
     return data
   }
 
-  async createType(type: ContentType): Promise<ContentType> {
-    const data = await this.client.put<ContentType>(`content_types${type.id}`)
+  async deleteType({ id, ...rest }: ContentType): Promise<void> {
+    const { sys } = await this.client.get<ContentTypeResponse>(
+      `content_types/${id}`
+    )
 
-    Logger.log(data)
+    if (sys.publishedCounter) {
+      await this.client.delete<ContentType>(`content_types/${id}/published`)
+    }
 
-    return data
+    await this.client.delete<ContentType>(`content_types/${id}`)
   }
 }

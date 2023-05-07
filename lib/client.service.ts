@@ -8,8 +8,8 @@ import {
   CONTENTFUL_URL,
 } from './tokens'
 
-type Data = Record<string, string | number | Record<string, string | number>>
-type Method = 'get' | 'put'
+type Data = unknown
+type Method = 'get' | 'put' | 'delete'
 
 @Injectable()
 export class ContentfulClient {
@@ -29,6 +29,10 @@ export class ContentfulClient {
     return this.request<T>('put', path, data)
   }
 
+  async delete<T>(path: string, data: Data = {}): Promise<T> {
+    return this.request<T>('delete', path, data)
+  }
+
   private getUrl(path: string): string {
     return [
       this.url,
@@ -43,18 +47,28 @@ export class ContentfulClient {
   private async request<T>(
     method: Method,
     path: string,
-    params: Data
+    data: Data
   ): Promise<T> {
+    const url = this.getUrl(path)
+
     const response = await lastValueFrom(
       this.httpService.request({
         method,
-        url: this.getUrl(path),
-        params,
+        url,
+        params: method === 'get' ? data : undefined,
+        data: method !== 'get' ? data : undefined,
         headers: {
           Authorization: `Bearer ${this.token}`,
         },
       })
-    ).catch(console.error)
+    ).catch(({ response }) => {
+      console.error({
+        message: response?.data?.message,
+        errors: response?.data?.details?.errors,
+        type: response?.data?.sys?.id,
+        url,
+      })
+    })
 
     if (!response) {
       throw new Error("contentful didn't work")

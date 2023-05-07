@@ -6,12 +6,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test:e2e": "npx jest --config ./tests/jest-e2e.json --runInBand",
-    "test:e2e:dev": "npx jest --config ./tests/jest-e2e.json --runInBand --watch"
+    "test": "npx jest --config ./tests/jest.json --watch",
+    "test:e2e": "npx jest --config ./tests/jest-e2e.json --watch"
   },
   "dependencies": {
     "@nestjs/axios": "^2.0.0",
-    "@nestjs/common": "^9.4.0"
+    "@nestjs/common": "^9.4.0",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nestjs/core": "^9.4.0",
