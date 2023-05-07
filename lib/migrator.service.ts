@@ -27,12 +27,7 @@ export class Migrator {
     const operations = this.differ.compare(target, existing)
 
     await Promise.all(
-      operations
-        .map(({ operation, value }) => {
-          console.log(`${operation}: ${value.name}`)
-          return { operation, value }
-        })
-        .map(({ operation, value }) => this.opsMap[operation](value))
+      operations.map(({ operation, value }) => this.opsMap[operation](value))
     )
   }
 }
