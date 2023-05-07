@@ -3,8 +3,8 @@ import { MigrationClient, ContentType } from './migration-client.service'
 import { Differ, InstructionType, InstructionValue } from './differ.service'
 
 type OperationMap = Record<
-  InstructionType,
-  (value: InstructionValue) => void | Promise<void>
+InstructionType,
+(value: InstructionValue) => Promise<unknown>
 >
 
 @Injectable()
@@ -14,10 +14,8 @@ export class Migrator {
     private readonly differ: Differ
   ) {}
 
-  private opsMap: OperationMap = {
-    [InstructionType.CREATE]: (value) => {
-      this.client.createType(value)
-    },
+  private readonly opsMap: OperationMap = {
+    [InstructionType.CREATE]: (value) => this.client.createType(value),
     [InstructionType.DELETE]: (value) => this.client.deleteType(value),
   }
 

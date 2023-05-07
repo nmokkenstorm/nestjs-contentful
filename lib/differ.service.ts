@@ -9,7 +9,7 @@ export enum InstructionType {
 
 export type InstructionValue = ContentType
 
-export type MigrationInstruction = {
+export interface MigrationInstruction {
   operation: InstructionType
   value: ContentType
 }
@@ -21,7 +21,7 @@ type CompareResult = MigrationInstruction[]
 @Injectable()
 export class Differ {
   constructor(
-    @Inject(TypeComperator) private readonly comperator: TypeComperator
+    @Inject(TypeComperator) private readonly comperator: TypeComperator,
   ) {}
 
   compare(source: ContentTypeStream, target: ContentTypeStream): CompareResult {
@@ -39,13 +39,13 @@ export class Differ {
 
   private findMissing(
     source: ContentTypeStream,
-    target: ContentTypeStream
+    target: ContentTypeStream,
   ): ContentTypeStream {
     return source.filter(
       (sourceItem) =>
         !target.some((targetItem) =>
-          this.comperator.typeEquals(sourceItem, targetItem)
-        )
+          this.comperator.typeEquals(sourceItem, targetItem),
+        ),
     )
   }
 }

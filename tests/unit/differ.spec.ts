@@ -27,8 +27,7 @@ describe('migrator', () => {
     const results = differ.compare(data, [])
 
     expect(results.length).toBe(data.length)
-    results.forEach(({ operation }) =>
-      expect(operation).toBe(InstructionType.CREATE)
+    results.forEach(({ operation }) => { expect(operation).toBe(InstructionType.CREATE) },
     )
   })
 
@@ -42,8 +41,7 @@ describe('migrator', () => {
     const results = differ.compare([], data)
 
     expect(results.length).toBe(data.length)
-    results.forEach(({ operation }) =>
-      expect(operation).toBe(InstructionType.DELETE)
+    results.forEach(({ operation }) => { expect(operation).toBe(InstructionType.DELETE) },
     )
   })
 
@@ -51,8 +49,7 @@ describe('migrator', () => {
     const results = differ.compare([data[0]], data)
 
     expect(results.length).toBe(1)
-    results.forEach(({ operation }) =>
-      expect(operation).toBe(InstructionType.DELETE)
+    results.forEach(({ operation }) => { expect(operation).toBe(InstructionType.DELETE) },
     )
   })
 })

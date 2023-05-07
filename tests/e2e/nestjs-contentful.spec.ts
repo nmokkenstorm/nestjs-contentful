@@ -7,9 +7,9 @@ describe('Contentful', () => {
   let server: Server
   let app: INestApplication
 
-  beforeEach(async () => {
+  beforeEach(async() => {
     const module = await Test.createTestingModule({
-      imports: [ApplicationModule],
+      imports: [ApplicationModule]
     }).compile()
 
     app = module.createNestApplication()
@@ -17,11 +17,11 @@ describe('Contentful', () => {
     await app.init()
   })
 
-  it(`it should not fail`, () => {
+  it('it should not fail', () => {
     expect(server).toBeDefined()
   })
 
-  afterEach(async () => {
+  afterEach(async() => {
     await app.close()
   })
 })

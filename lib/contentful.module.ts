@@ -78,11 +78,11 @@ export class ContentfulModule {
           useClass: SimpleComperator,
         },
       ],
-      exports: [ContentfulClient],
+      exports: [ContentfulClient]
     }
   }
 
-  async onApplicationBootstrap() {
+  async onApplicationBootstrap(): Promise<void> {
     this.logger.log('checking for updates..')
     await this.migrator.ensureExists([{ id: 'foo', name: 'bar', fields: [] }])
     this.logger.log('done updating')

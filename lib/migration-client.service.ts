@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { ContentfulClient } from './client.service'
 
 interface ContentField {
@@ -17,19 +17,19 @@ export interface ContentType {
 }
 
 type SysType = 'Array' | 'ContentType'
-type Sys<T extends SysType = SysType> = {
+interface Sys<T extends SysType = SysType> {
   type: T
   id: string
   publishedCounter: number
 }
 
-type ContentTypeResponse = {
+interface ContentTypeResponse {
   sys: Sys
   name: string
   fields: ContentField[]
 }
 
-type Wrapper = {
+interface Wrapper {
   sys: Sys<'Array'>
   total: number
   skip: number
@@ -55,10 +55,10 @@ export class MigrationClient {
 
   async deleteType({ id, ...rest }: ContentType): Promise<void> {
     const { sys } = await this.client.get<ContentTypeResponse>(
-      `content_types/${id}`
+      `content_types/${id}`,
     )
 
-    if (sys.publishedCounter) {
+    if (sys.publishedCounter !== 0) {
       await this.client.delete<ContentType>(`content_types/${id}/published`)
     }
 

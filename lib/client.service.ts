@@ -21,15 +21,15 @@ export class ContentfulClient {
     private readonly httpService: HttpService
   ) {}
 
-  async get<T>(path: string, data: Data = {}): Promise<T> {
+  get<T>(path: string, data: Data = {}): Promise<T> {
     return this.request<T>('get', path, data)
   }
 
-  async put<T>(path: string, data: Data = {}): Promise<T> {
+  put<T>(path: string, data: Data = {}): Promise<T> {
     return this.request<T>('put', path, data)
   }
 
-  async delete<T>(path: string, data: Data = {}): Promise<T> {
+  delete<T>(path: string, data: Data = {}): Promise<T> {
     return this.request<T>('delete', path, data)
   }
 
@@ -70,7 +70,7 @@ export class ContentfulClient {
       })
     })
 
-    if (!response) {
+    if (response == null) {
       throw new Error("contentful didn't work")
     }
 
