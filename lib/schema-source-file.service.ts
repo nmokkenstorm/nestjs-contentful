@@ -22,7 +22,7 @@ export class FileSchemaSource implements SchemaSource {
     this.options = { ...defaultOptions, ...options }
   }
 
-  read = async (
+  read = async(
     options: Partial<FileSchemaSourceOptions> = {},
   ): Promise<Schema> => {
     const parsedOptions = this.parseOptions(options)
@@ -32,7 +32,7 @@ export class FileSchemaSource implements SchemaSource {
     return JSON.parse((await readFile(path)).toString())
   }
 
-  write = async (
+  write = async(
     schema: Schema,
     options: Partial<FileSchemaSourceOptions> = {},
   ): Promise<void> => {
@@ -43,11 +43,11 @@ export class FileSchemaSource implements SchemaSource {
     await writeFile(path, JSON.stringify(schema))
   }
 
-  private parseOptions = (
+  private readonly parseOptions = (
     options: Partial<FileSchemaSourceOptions> = {},
   ): FileSchemaSourceOptions => ({ ...this.options, ...options })
 
-  private getDir = async ({
+  private readonly getDir = async({
     baseDir,
     space,
   }: FileSchemaSourceOptions): Promise<string> => {
@@ -64,12 +64,12 @@ export class FileSchemaSource implements SchemaSource {
     }
   }
 
-  private getFilePath = async (
+  private readonly getFilePath = async(
     options: FileSchemaSourceOptions,
   ): Promise<string> => {
     const { file, environment } = options
     const path = join(await this.getDir(options), file ?? environment)
 
-    return path.endsWith(".json") ? path : `${path}.json`
+    return path.endsWith('.json') ? path : `${path}.json`
   }
 }

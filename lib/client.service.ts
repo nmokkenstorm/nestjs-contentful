@@ -2,70 +2,92 @@ import { Inject, Injectable } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
 import { lastValueFrom } from 'rxjs'
 import {
-  CONTENTFUL_ENV,
-  CONTENTFUL_SPACE,
-  CONTENTFUL_TOKEN,
-  CONTENTFUL_URL,
-} from './tokens'
+  OptionalConfig,
+  ContentfulConfig,
+  defaultConfig,
+  isConfigKey,
+} from './config'
 
 type Data = unknown
-type Method = 'get' | 'put' | 'delete'
+type Method = 'get' | 'put' | 'delete' | 'post'
+
+const validationMessage = 'missing required contentful info'
 
 @Injectable()
 export class ContentfulClient {
+  private readonly config: OptionalConfig
+
   constructor(
-    @Inject(CONTENTFUL_ENV) private readonly environment: string,
-    @Inject(CONTENTFUL_SPACE) private readonly space: string,
-    @Inject(CONTENTFUL_TOKEN) private readonly token: string,
-    @Inject(CONTENTFUL_URL) private readonly url: string,
-    private readonly httpService: HttpService
-  ) {}
-
-  get<T>(path: string, data: Data = {}): Promise<T> {
-    return this.request<T>('get', path, data)
+    @Inject(ContentfulConfig) config: OptionalConfig = {},
+    private readonly httpService: HttpService,
+  ) {
+    this.config = { ...defaultConfig, ...config }
   }
 
-  put<T>(path: string, data: Data = {}): Promise<T> {
-    return this.request<T>('put', path, data)
+  get<T>(path: string, data: Data = {}, config: OptionalConfig = {}): Promise<T> {
+    return this.request<T>('get', path, data, config)
   }
 
-  delete<T>(path: string, data: Data = {}): Promise<T> {
-    return this.request<T>('delete', path, data)
+  put<T>(path: string, data: Data = {}, config: OptionalConfig = {}): Promise<T> {
+    return this.request<T>('put', path, data, config)
   }
 
-  private getUrl(path: string): string {
-    return [
-      this.url,
-      'spaces',
-      this.space,
-      'environments',
-      this.environment,
-      path,
-    ].join('/')
+  async delete(path: string, data: Data = {}, config: OptionalConfig = {}): Promise<void> {
+    await this.request('delete', path, data, config)
+  }
+
+  async post(path: string, data: Data = {}, config: OptionalConfig = {}): Promise<void> {
+    await this.request('post', path, data, config)
+  }
+
+  private getUrl(path: string, config: OptionalConfig): string {
+    const { url, space, environment } = this.getConfig(config)
+
+    return [url, 'spaces', space, 'environments', environment, path].join('/')
+  }
+
+  private readonly validateConfig = (
+    config: OptionalConfig,
+  ): config is ContentfulConfig =>
+    Object.entries(config).every(([key, value]) => value !== undefined && value !== '' && isConfigKey(key))
+
+  private readonly getConfig = (config: OptionalConfig = {}): ContentfulConfig => {
+    const result = { ...defaultConfig, ...this.config, ...config }
+
+    if (!this.validateConfig(result)) {
+      throw new Error(validationMessage)
+    }
+
+    return result
   }
 
   private async request<T>(
     method: Method,
     path: string,
-    data: Data
+    data: Data,
+    config: OptionalConfig
   ): Promise<T> {
-    const url = this.getUrl(path)
+    const parsedConfig = this.getConfig(config)
+    const { token } = parsedConfig
+    const url = this.getUrl(path, parsedConfig)
 
     const response = await lastValueFrom(
       this.httpService.request({
         method,
         url,
-        params: method === 'get' ? data : undefined,
-        data: method !== 'get' ? data : undefined,
+        [this.hasBody(method) ? 'data' : 'params']: data,
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${token}`,
         },
-      })
-    ).catch(({ response }) => {
+      }),
+    ).catch((error) => {
       console.error({
-        message: response?.data?.message,
-        errors: response?.data?.details?.errors,
-        type: response?.data?.sys?.id,
+        config,
+        error,
+        parsedConfig: this.getConfig(config),
+        message: error?.response?.data?.message,
+        errors: error?.response?.data?.details?.errors,
+        type: error?.response?.data?.sys?.id,
         url,
       })
     })
@@ -75,5 +97,9 @@ export class ContentfulClient {
     }
 
     return response.data
+  }
+
+  private hasBody(method: Method): boolean {
+    return ['get', 'delete'].includes(method)
   }
 }
