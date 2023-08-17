@@ -1,8 +1,8 @@
 {
-    "collectCoverage": true,
+    "collectCoverage": false,
     "coverageReporters": ["text"],
     "collectCoverageFrom": ["./lib/**/*.{ts,tsx,js,jsx}"],
-    "roots": ["lib", "tests/unit"],
+    "roots": ["lib", "tests"],
     "moduleFileExtensions": ["js", "json", "ts"],
     "testEnvironment": "node",
     "testRegex": ".spec.ts$",

@@ -24,3 +24,8 @@ dist
 # Editors
 *.swo
 *.swp
+
+# generated test files
+
+tests/fixtures/schemas
+tests/schemas/

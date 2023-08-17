@@ -1,11 +1,17 @@
 import { Module } from '@nestjs/common'
-import { ContentfulModule } from '../../lib'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ContentfulModule } from '../../lib/contentful.module'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     ContentfulModule.forRoot({
-      token: process.env.CONTENTFUL_TOKEN ?? '',
-      space: process.env.CONTENTFUL_SPACE ?? '',
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => ({
+        space: config.getOrThrow<string>('CONTENTFUL_SPACE'),
+        token: config.getOrThrow<string>('CONTENTFUL_TOKEN'),
+      }),
+      inject: [ConfigService],
     }),
   ],
 })
