@@ -7,8 +7,7 @@
     "repository": "https://github.com/nmokkenstorm/nestjs-contentful"
   },
   "type": "commonjs",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/contentful.module.ts",
   "scripts": {
     "test": "npx jest --config ./jest.json",
     "test:watch": "npx jest --config ./jest.json --watchAll",
