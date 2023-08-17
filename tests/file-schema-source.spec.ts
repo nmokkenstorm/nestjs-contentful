@@ -1,5 +1,5 @@
-import { FileSchemaSource } from '../../lib/schema-source-file.service'
-import { Schema } from '../../lib/schema-source.interface'
+import { FileSchemaSource } from '../lib/schema-sources/file.source'
+import { Schema } from '../lib/schema-sources/source.interface'
 import { rmdir, writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 

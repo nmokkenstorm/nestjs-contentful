@@ -1,4 +1,4 @@
-import { ContentType } from './migration-client.service'
+import { ContentType } from '../content-type.interface'
 
 export interface SchemaOptions {
   environment: string

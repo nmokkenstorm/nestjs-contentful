@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing'
-import { ApplicationModule } from '../src/app.module'
-import { ContentfulSchemaSource } from '../../lib/schema-source-contentful.service'
+import { ApplicationModule } from './src/app.module'
+import { ContentfulSchemaSource } from '../lib/schema-sources/contentful.source'
 
 describe('Contentful Schema Source', () => {
   const create = async(): Promise<ContentfulSchemaSource> => {

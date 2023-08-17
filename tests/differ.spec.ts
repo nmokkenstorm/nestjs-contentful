@@ -1,6 +1,6 @@
-import { Differ, InstructionType } from '../../lib/differ.service'
-import { SimpleComperator } from '../../lib/simple-comperator.service'
-import { ContentType } from '../../lib/migration-client.service'
+import { Differ, InstructionType } from '../lib/services/differ.service'
+import { SimpleComperator } from '../lib/services/simple-comperator.service'
+import { ContentType } from '../lib/content-type.interface'
 
 const createType = (seed: string | number): ContentType => ({
   name: String(seed),

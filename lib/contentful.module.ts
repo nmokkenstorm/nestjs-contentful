@@ -8,9 +8,9 @@ import {
 } from '@nestjs/common'
 import { HttpModule } from '@nestjs/axios'
 
-import { ContentfulSchemaSource } from './schema-source-contentful.service'
-import { ContentfulConfig, RequiredConfig } from './config'
-import { ContentfulClient } from './client.service'
+import { ContentfulSchemaSource } from './schema-sources/contentful.source'
+import { ContentfulConfig, RequiredConfig } from './infrastructure/config'
+import { ContentfulClient } from './infrastructure/client.service'
 
 // TODO fix me? TypeORM does the same but eghhh
 // @see https://github.com/nestjs/typeorm/blob/master/lib/interfaces/typeorm-options.interface.ts#L53

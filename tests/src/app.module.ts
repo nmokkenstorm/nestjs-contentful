@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { ContentfulModule } from '../../lib'
+import { ContentfulModule } from '../../lib/contentful.module'
 
 @Module({
   imports: [

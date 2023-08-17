@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ContentType } from './migration-client.service'
+import { ContentType } from '../content-type.interface'
 import { TypeComperator } from './type-comperator.service'
 
 @Injectable()

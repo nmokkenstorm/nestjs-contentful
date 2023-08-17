@@ -1,8 +1,7 @@
 import { join } from 'path'
 import { existsSync, mkdirSync } from 'fs'
 import { readFile, writeFile } from 'fs/promises'
-
-import { SchemaSource, Schema, SchemaOptions } from './schema-source.interface'
+import { SchemaSource, Schema, SchemaOptions } from './source.interface'
 
 const defaultOptions: FileSchemaSourceOptions = {
   space: 'default',

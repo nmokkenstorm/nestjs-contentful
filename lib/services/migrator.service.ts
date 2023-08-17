@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import { MigrationClient, ContentType } from './migration-client.service'
+import { ContentType } from '../content-type.interface'
+import { MigrationClient } from './migration-client.service'
 import { Differ, InstructionType, InstructionValue } from './differ.service'
 
 type OperationMap = Record<
