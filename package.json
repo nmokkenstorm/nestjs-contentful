@@ -12,7 +12,6 @@
   "scripts": {
     "test": "npx jest --config ./jest.json",
     "test:watch": "npx jest --config ./jest.json --watchAll",
-    "test:e2e": "npx jest --config ./jest-e2e.json",
     "lint": "npx eslint ./{lib,tests}",
     "lint:fix": "npx eslint ./{lib,tests} --fix"
   },
