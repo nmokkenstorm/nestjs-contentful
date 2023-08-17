@@ -1,6 +1,6 @@
 import { FileSchemaSource } from '../lib/schema-sources/file.source'
 import { Schema } from '../lib/schema-sources/source.interface'
-import { rmdir, writeFile, mkdir } from 'fs/promises'
+import { rm, writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 
 describe('File Schema Source', () => {
@@ -21,7 +21,7 @@ describe('File Schema Source', () => {
 
   beforeAll(async() => {
     try {
-      await rmdir(baseDir, { recursive: true })
+      await rm(baseDir, { recursive: true })
       await mkdir(baseDir, { recursive: true })
     } catch (e) {
       // already empty

@@ -10,6 +10,6 @@ export interface Schema {
 }
 
 export interface SchemaSource {
-  read: (options: Partial<SchemaOptions>) => Promise<Schema>
-  write: (schema: Schema, options: Partial<SchemaOptions>) => Promise<void>
+  read: (options?: Partial<SchemaOptions>) => Promise<Schema>
+  write: (schema: Schema, options?: Partial<SchemaOptions>) => Promise<void>
 }
